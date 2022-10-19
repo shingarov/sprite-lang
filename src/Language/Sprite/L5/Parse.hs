@@ -29,6 +29,7 @@ import           Language.Sprite.Common.Parse
 import qualified Language.Sprite.Common.Misc as Misc
 import           Language.Sprite.L5.Types hiding (immExpr)
 -- import           Language.Sprite.L5.Constraints
+import Debug.Trace
 
 parseFile :: FilePath -> IO SrcProg
 parseFile = FP.parseFromFile prog 
@@ -80,9 +81,9 @@ ctorResP =  Just <$> (FP.reservedOp "=>" *> brackets concReftB)
         <|> return Nothing
 
 mkCtor :: Ident -> [Ident] -> Ctor -> (SrcBind, RType)
-mkCtor tc args c  = (dc, generalize dcType)
+mkCtor tc args c  = trace ("\n********************\ntc = " ++ show tc ++ "\nargs = " ++ show args ++ "\ndcRes = " ++ show dcRes ++ "\nxts = " ++ show xts ++ "\n\n")     (dc, generalize dcType)
   where 
-    dcType        = foldr (\(x, t) s -> TFun x t s) dcRes xts
+    dcType        = foldr (\(x, t) s -> trace ("\n\n########TFun:\nx=" ++ show x ++ "\nt=" ++ show t ++ "\ns=" ++ show s)   (TFun x t s) ) dcRes xts
     dcRes         = TCon tc (rVar <$> args) dcReft
     Ctor dc xts r = c 
     dcReft        = Mb.fromMaybe mempty r

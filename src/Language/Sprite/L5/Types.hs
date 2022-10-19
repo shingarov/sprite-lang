@@ -12,6 +12,7 @@ import qualified Language.Sprite.Common.UX     as UX
 import           Language.Sprite.Common
 import qualified Data.Set                      as S
 import qualified Data.List                     as L
+import Debug.Trace
 
 -- | Basic types --------------------------------------------------------------
 newtype TVar = TV F.Symbol
@@ -336,22 +337,32 @@ baseSort (TVar a) = F.FObj (F.symbol a)
 
 rTypeSort :: RType -> F.Sort
 rTypeSort (TBase b _)   = baseSort b
-rTypeSort (TCon c ts _) = F.fAppTC (fTyCon c) (rTypeSort <$> ts)
+rTypeSort (TCon c ts _) = a
+  where
+    a = trace ("\n\nrTypeSort (TCon):\nc = " ++ show c ++ "\nts" ++ show ts ++ "\nx = " ++ show x ++ "\ny = " ++ show y) F.fAppTC x y
+    x = fTyCon c
+    y = rTypeSort <$> ts
 rTypeSort t@(TFun {})   = rTypeSortFun t 
 rTypeSort t@(TAll {})   = rTypeSortAll t 
 
 rTypeSortFun :: RType -> F.Sort
 rTypeSortFun = F.mkFFunc 0 . fmap rTypeSort . go []
   where 
-    go ts (TFun _ t1 t2) = go (t1:ts) t2
-    go ts t              = reverse (t:ts)
+    go ts (TFun _ t1 t2) = trace ("\n\nFIRST go:\nts = " ++ show ts ++ "\nt1 = " ++ show t1 ++ "\nt2 = " ++ show t2 ++ "\n---> " ++ show a)    a
+      where
+        a = go (t1:ts) t2
+    go ts t              = trace ("\n\nSECOND go:\nts = " ++ show ts ++ "\nt = " ++ show t ++ "\n---> " ++ show a)    a
+      where
+        a = reverse (t:ts)
 
 rTypeSortAll :: RType -> F.Sort
-rTypeSortAll s = genSort (rTypeSort t)
+rTypeSortAll s = trace ("\n\n\n**** rTypeSortAll:\ns = " ++ show s ++ "\nt = " ++ show t ++ "\n---> " ++ show (genSort rts) )   (genSort rts)
   where
-    genSort t  = L.foldl' (flip F.FAbs) (F.sortSubst su t) [0..n-1]
+    genSort x  = trace ("\n\nIN rTypeSortAll, x = " ++ show x)   ( L.foldl' (flip F.FAbs) (F.sortSubst su x) [0..n-1] )
+    rts        = rTypeSort t
     (as, t)    = bkAll s
-    su         = F.mkSortSubst $ zip sas (F.FVar <$> [0..])
+    z          = zip sas (F.FVar <$> [0..])
+    su         = F.mkSortSubst $ z
     sas        = F.symbol <$> as
     n          = length as
 

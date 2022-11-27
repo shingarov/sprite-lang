@@ -35,14 +35,14 @@ packages:
 - completed:
     name: liquid-fixpoint
     version: 0.8.10.2.1
-    git: https://github.com/ucsd-progsys/liquid-fixpoint
+    git: https://github.com/shingarov/liquid-fixpoint
     pantry-tree:
       size: 20326
-      sha256: 6774b6ef08a744a825c05656e84d12c77eb99edbbe5c27dd39645d573fb3abba
-    commit: d77c1eb45dc2ac73c5c547ed3353215ec329c65b
+      sha256: c8374bb84ed680110fb62c7485851200ba1d5b73e56d11a1b50c09e79079c9e9
+    commit: 05c6416edbb78db4decded75b085ca9cecbf0390
   original:
-    git: https://github.com/ucsd-progsys/liquid-fixpoint
-    commit: d77c1eb45dc2ac73c5c547ed3353215ec329c65b
+    git: https://github.com/shingarov/liquid-fixpoint
+    commit: 05c6416edbb78db4decded75b085ca9cecbf0390
 snapshots:
 - completed:
     size: 532383

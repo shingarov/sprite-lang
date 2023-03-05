@@ -161,7 +161,7 @@ extEnvTVs = foldr (flip extEnvTV)
 -------------------------------------------------------------------------------
 elabS :: Env -> SrcExpr -> ElabM (ElbExpr, RType)
 elabS g e@(EImm i _) = do
-  (ts, n, t') <- Misc.traceShow ("elabS: " ++ show i) <$> immS g i
+  (ts, n, t') <- {- Misc.traceShow ("elabS: " ++ show i) <$> -} immS g i
   return (mkTApp e ts n, t')
 
 elabS g (EAnn e s l) = do 

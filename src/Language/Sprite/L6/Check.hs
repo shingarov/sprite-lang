@@ -109,7 +109,7 @@ subP :: F.SrcSpan -> RARef -> RARef -> SrcCstr
 subP l (ARef xts1 (Known _ p1)) (ARef xts2 (Known _ p2)) 
   = cImpl l xts1 p1 (substs p2 su)
   where 
-    su = Misc.traceShow "subP" $ Misc.safeZip "subP" (fst <$> xts2) (fst <$> xts1)
+    su = {- Misc.traceShow "subP" $ -} Misc.safeZip "subP" (fst <$> xts2) (fst <$> xts1)
 
 -------------------------------------------------------------------------------
 -- | 'Checking' constraints
@@ -268,7 +268,7 @@ synthImm :: Env -> SrcImm -> CG RType
 
 -}
 synthImm g (EVar x l) 
-  | Just t <- getEnv g x = return $ Misc.traceShow "synthImm" $ singleton x t 
+  | Just t <- getEnv g x = return $ {- Misc.traceShow "synthImm" $ -} singleton x t 
   | otherwise            = failWith ("Unbound variable:" <+> F.pprint x) l
 
 {- [Syn-Con] 
@@ -293,7 +293,7 @@ synth g (EImm i _) = do
 
 -}
 synth g (EAnn e s l) = do 
-  t <- Misc.traceShow "EANN-FRESH" <$> fresh l g s
+  t <- {- Misc.traceShow "EANN-FRESH" <$> -} fresh l g s
   c <- check g e t 
   return (c, t) 
 
@@ -325,7 +325,7 @@ synth g (ETApp e t l) = do
   (ce, te)   <- synth g e
   case te of
     TAll a s -> do tt <- {- Misc.traceShow "REFRESH" <$> -} refresh l g t 
-                   return (ce, Misc.traceShow "SYN-TApp: " $ tsubst a tt s)
+                   return (ce, {- Misc.traceShow "SYN-TApp: " $ -} tsubst a tt s)
     _        -> failWith "Type Application to non-forall" l 
 
 {- [Syn-RApp] 
@@ -337,7 +337,7 @@ synth g (ETApp e t l) = do
 
 synth g (ERApp e l) = do 
   (c, s) <- synth g e
-  s'     <- Misc.traceShow ("SYN-RApp: " ++ show (void e, void s)) <$> rinst l s
+  s'     <- {- Misc.traceShow ("SYN-RApp: " ++ show (void e, void s)) <$> -} rinst l s
   return (c, s')
 
 synth _ e = 

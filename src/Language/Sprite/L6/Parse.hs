@@ -47,7 +47,7 @@ prog = do
   ms   <- (try (many measureP)) <|> return []
   typs <- many typP
   src  <- declsExpr <$> many decl
-  return (Prog qs ms src (Misc.traceShow "prog-types" typs))
+  return (Prog qs ms src ({- Misc.traceShow "prog-types" -} typs))
 
 measureP :: FP.Parser (F.Symbol, F.Sort)
 measureP = annL >> (Misc.mapSnd (rTypeSort . generalize) <$> tyBindP "measure")

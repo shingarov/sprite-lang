@@ -161,6 +161,8 @@ getInv' env t@(TCon c _ _ _) = case F.lookupSEnv c (eInv env) of
                                  Just r  -> strengthenTop t r 
 getInv' _   t                = t
 
+-- Initial empty Env (ΓContext in Smalltalk)
+
 empEnv :: [(F.Symbol, F.Sort)] -> [SrcData] -> Env 
 empEnv ms typs = foldr (\(x, t) g -> extEnv g x t) env0 prelSigs 
   where 

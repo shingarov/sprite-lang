@@ -111,7 +111,7 @@ sortPred _ _                           = Nothing
 data Env = Env 
   { eBinds :: !(F.SEnv RType)     -- ^ value binders 
   , eSize  :: !Integer            -- ^ number of binders?
-  , eTVars :: !(F.SEnv ())        -- ^ type variables 
+  , eTVars :: !(F.SEnv ())        -- ^ type variables
   }
 
 extEnv :: Env -> F.Symbol -> RType -> Env  
@@ -135,6 +135,10 @@ predRType p = TBase TBool (known $ F.predReft p)
 
 getEnv :: Env -> F.Symbol -> Maybe RType
 getEnv env x = F.lookupSEnv x (eBinds env) 
+
+
+
+-- Initial empty Env (ΓContext in Smalltalk)
 
 empEnv :: [SrcData] -> Env 
 empEnv typs = Env ctorEnv 0 F.emptySEnv

@@ -153,8 +153,6 @@ elabAlt g y t (Alt c zs e l) = do
     Nothing -> matchError al "bad pattern match"
     Just g' -> (\e' -> Alt c zs e' l) <$> elabC g' e t 
 
-
-
 extEnvTVs :: Env -> [TVar] -> Env
 extEnvTVs = foldr (flip extEnvTV)
 
@@ -286,18 +284,17 @@ instance SubsTy ElbDecl where
 subsTyExpr :: TvSub -> ElbExpr -> ElbExpr  
 subsTyExpr su           = go
   where 
-    go (EFun b e l)     = EFun  b (go e)               l 
-    go (EApp e i l)     = EApp    (go e)  i            l
-    go (ELet d e l)     = ELet    d'      (go e)       l where d' = subsTy su d 
-    go (EAnn e t l)     = EAnn    (go e)  t            l
-    go (EIf  i e1 e2 l) = EIf   i (go e1) (go e2)      l
-    go (ETLam a e l)    = ETLam a (go e)               l
-    go (ETApp e t l)    = ETApp   (go e) (subsTy su t) l
-    go (ERApp e   l)    = ERApp   (go e)               l
-    go (ECase x as l)   = ECase x (goA <$> as)         l  
+    go (EFun b e l)     = EFun  b (go e)                 l 
+    go (EApp e i l)     = EApp    (go e)   i             l
+    go (ELet d e l)     = ELet    d'       (go e)        l where d' = subsTy su d 
+    go (EAnn e t l)     = EAnn    (go e)  t              l
+    go (EIf  i e1 e2 l) = EIf   i (go e1)  (go e2)       l
+    go (ETLam a e l)    = ETLam a (go e)                 l
+    go (ETApp e t l)    = ETApp   (go e)   (subsTy su t) l
+    go (ERApp e   l)    = ERApp   (go e)                 l
+    go (ECase x as l)   = ECase x (goA <$> as)           l  
     go e@(EImm {})      = e
-    goA alt             = alt -- { altTyArgs = fmap (subsTy su) <$> altTyArgs alt }
-                              { altExpr = go $  altExpr   alt }
+    goA alt             = alt { altExpr = go $  altExpr   alt }
 
 
 

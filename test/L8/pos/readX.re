@@ -2,7 +2,7 @@
 
 type heap('ptr) [v|len(v) >= 0] =
   | Emp                                 => [v| v = Emp && len v = 0] 
-  | Disj (p:'ptr, xs:heap('ptr), b:int) => [v| v = Disj(p, xs, b) && len v = 1 + len(xs)]
+  | Disj (p:'ptr, xs:heap('ptr[q| q != p]), b:int) => [v| v = Disj(p, xs, b) && len v = 1 + len(xs)]
   ;
 
 

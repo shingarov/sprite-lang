@@ -19,3 +19,11 @@ let rec own = (p,h) => {
   }
 };
 
+
+/*@ val read : 'ptr => h:heap('ptr)[v| own(v)] => int */
+let read = (p,h) => {
+  switch (h) {
+    | Emp => 0
+    | Disj(q,hh,b) => 42
+  }
+};

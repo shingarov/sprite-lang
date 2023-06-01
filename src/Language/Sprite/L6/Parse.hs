@@ -148,6 +148,7 @@ op =  (FP.reservedOp "*"    >> pure BTimes)
   <|> (FP.reservedOp "=="   >> pure BEq   )  
   <|> (FP.reservedOp ">"    >> pure BGt   )  
   <|> (FP.reservedOp ">="   >> pure BGe   )  
+  <|> (FP.reservedOp "!="   >> pure BNe   )  
   <|> (FP.reservedOp "&&"   >> pure BOr   )  
   <|> (FP.reservedOp "||"   >> pure BOr   )  
 

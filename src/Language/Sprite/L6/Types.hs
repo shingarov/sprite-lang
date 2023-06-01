@@ -105,6 +105,7 @@ data PrimOp
   | BEq 
   | BGt
   | BGe
+  | BNe
   | BAnd
   | BOr
   | BNot

@@ -20,10 +20,15 @@ let rec own = (p,h) => {
 };
 
 
-/*@ val read : p:'ptr => h:heap('ptr)[v| own(p,v)] => int */
-let read = (p,h) => {
+/*@ val read : p:'ptr => h:heap('ptr)[v| own(p,v)] => int / len(h) */
+let rec read = (p,h) => {
   switch (h) {
     | Emp => impossible(0)
-    | Disj(q,hh,b) => 42
+    | Disj(q,hh,b) => let found = p==q;
+                      if (found) {
+                        b
+                      } else {
+                        read(p,hh)
+                      }
   }
 };

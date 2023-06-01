@@ -6,7 +6,7 @@ type heap('ptr) [v|len(v) >= 0] =
   ;
 
 
-/*@ val own : 'ptr => h:heap('ptr) => bool / len(h) */
+/*@ reflect own : 'ptr => h:heap('ptr) => bool / len(h) */
 let rec own = (p,h) => {
   switch (h) {
     | Emp        => false
@@ -20,10 +20,10 @@ let rec own = (p,h) => {
 };
 
 
-/*@ val read : 'ptr => h:heap('ptr)[v| own(v)] => int */
+/*@ val read : p:'ptr => h:heap('ptr)[v| own(p,v)] => int */
 let read = (p,h) => {
   switch (h) {
-    | Emp => 0
+    | Emp => impossible(0)
     | Disj(q,hh,b) => 42
   }
 };

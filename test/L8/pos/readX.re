@@ -20,7 +20,7 @@ let rec own = (p,h) => {
 };
 
 
-/*@ val read : p:'ptr => h:heap('ptr)[v| own(p,v)] => int / len(h) */
+/*@ reflect read : p:'ptr => h:heap('ptr)[v| own(p,v)] => int / len(h) */
 let rec read = (p,h) => {
   switch (h) {
     | Emp => impossible(0)
@@ -31,4 +31,15 @@ let rec read = (p,h) => {
                         read(p,hh)
                       }
   }
+};
+
+
+/*@ val checkRead1 : int => int */
+let checkRead1 = (x) => {
+  let p = 1024;
+  let vvv = 42;
+  let h0 = Emp;
+  let h1 = Disj(p,h0,vvv);
+  let r = read(p,h1);
+  20
 };

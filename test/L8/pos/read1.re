@@ -2,7 +2,7 @@
 
 type heap('ptr) [v|len(v) >= 0] =
   | Emp                                 => [v| v = Emp && len v = 0] 
-  | Disj (p:'ptr, xs:heap('ptr[q| q != p]), b:int) => [v| v = Disj(p, xs, b) && len v = 1 + len(xs)]
+  | Disj (p:'ptr, xs:heap('ptr[q| q != p]), b:int[bb| 0<bb ]) => [v| v = Disj(p, xs, b) && len v = 1 + len(xs)]
   ;
 
 
@@ -20,10 +20,10 @@ let rec own = (p,h) => {
 };
 
 
-/*@ reflect read : p:'ptr => h:heap('ptr)[v| own(p,v)] => int / len(h) */
+/*@ reflect read : p:'ptr => h:heap('ptr)[v| own(p,v)] => int[nz| nz != 0] / len(h) */
 let rec read = (p,h) => {
   switch (h) {
-    | Emp => impossible(0)
+    | Emp => 0
     | Disj(q,hh,b) => let found = p==q;
                       if (found) {
                         b
@@ -34,12 +34,12 @@ let rec read = (p,h) => {
 };
 
 
-/*@ val checkRead1 : int => int */
+/*@ val checkRead1 : int => int[v| v==42 ] */
 let checkRead1 = (x) => {
   let p = 1024;
   let vvv = 42;
   let h0 = Emp;
   let h1 = Disj(p,h0,vvv);
   let r = read(p,h1);
-  20
+  r
 };

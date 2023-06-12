@@ -460,8 +460,13 @@ refactorAppP isRV p   = H.PAnd (H.Reft (F.pAnd fs) : rs)
 isRVarApp :: (F.Symbol -> Bool) -> F.Expr -> Either H.Pred F.Expr
 isRVarApp isRV e@(F.EApp {}) 
   | (F.EVar k, args) <- F.splitEApp e 
-  , isRV k                 = Left (H.Var k (rvarArgSymbol msg <$> args)) where msg = F.showpp e
+  , isRV k                 = Left (rvAppHPred e k args)
 isRVarApp _    e           = Right e
+
+rvAppHPred :: F.Expr -> F.Symbol -> [F.Expr] -> H.Pred
+rvAppHPred outerE k args = H.Var k (rvarArgSymbol msg <$> args)
+  where
+    msg = F.showpp outerE
 
 rvarArgSymbol :: String -> F.Expr -> F.Symbol 
 rvarArgSymbol _ (F.EVar x) = x

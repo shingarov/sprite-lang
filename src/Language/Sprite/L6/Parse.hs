@@ -31,6 +31,8 @@ import           Language.Sprite.Common.Parse
 
 import           Language.Sprite.L6.Types hiding (rVarARef, immExpr)
 -- import           Language.Sprite.L6.Constraints
+import Debug.Trace
+
 
 parseFile :: FilePath -> IO SrcProg
 parseFile = FP.parseFromFile prog 
@@ -83,8 +85,9 @@ ctorResP =  Just <$> (FP.reservedOp "=>" *> FP.brackets concReftB)
         <|> return Nothing
 
 mkCtor :: Ident -> [Ident] -> [RVar] -> Ctor -> (SrcBind, RType)
-mkCtor tc tvs rvs c  = (dc, closeType rvs xts dcRes)
+mkCtor tc tvs rvs c  = trace ("\n\nmkCtor:\ntc = " ++ show tc ++ "\ndc = " ++ show dc ++ "\nxts = " ++ show xts ++ "\nr = " ++ show r)    (dc, closed)
   where 
+    closed = closeType rvs xts dcRes
     -- dcType        = foldr (\(x, t) s -> TFun x t s) dcRes xts
     dcRes         = TCon tc (rVar <$> tvs) (rVarARef <$> rvs) dcReft
     Ctor dc xts r = c 
@@ -100,8 +103,9 @@ closeType rvs xts = tyParams
      valParams ty = foldr (\(x, t) s -> TFun x t s) ty xts
 
 rVarARef :: RVar -> RARef
-rVarARef (RVar p ts) = ARef xts (predReft pred)
+rVarARef (RVar p ts) = trace ("\n\nrVarARef:\np = " ++ show p ++ "\nts = " ++ show ts ++ "\nxts = " ++ show xts ++ "\n---> " ++ show result)     result
   where 
+    result = ARef xts (predReft pred)
     xts  = zipWith (\t i -> (F.intSymbol "rvTmp" i, t)) ts [0..] 
     pred = F.eApps (F.expr p) (F.expr . fst <$> xts)
 

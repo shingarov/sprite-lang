@@ -18,6 +18,8 @@ import           Language.Sprite.Common
 import qualified Data.Set                               as S
 import qualified Data.List                              as L
 
+import Debug.Trace
+
 -- | Basic types --------------------------------------------------------------
 newtype TVar = TV F.Symbol
   deriving (Eq, Ord, Show)
@@ -464,9 +466,25 @@ isRVarApp isRV e@(F.EApp {})
 isRVarApp _    e           = Right e
 
 rvAppHPred :: F.Expr -> F.Symbol -> [F.Expr] -> H.Pred
-rvAppHPred outerE k args = H.Var k (rvarArgSymbol msg <$> args)
+rvAppHPred outerE k args = trace ("\n\nrvAppHPred:\ne = " ++ show outerE ++ "\nk = " ++ show k ++ "\nargs = " ++ show args ++ "\n---> " ++ show result ++ "\nsu=" ++ show resultExpr)   result
   where
+    result = H.Reft resultExpr
+    resultExpr = F.PKVar (F.KV k) su
+    su = F.mkSubst $ exprsSubsts k 0 args
     msg = F.showpp outerE
+
+--    result = H.Var k (rvarArgSymbol msg <$> args)
+
+exprsSubsts :: F.Symbol -> Int -> [F.Expr]    -> [(F.Symbol, F.Expr)]
+exprsSubsts       k         j      []         =  []
+exprsSubsts       k         j      (arg:args) =  (hvarArg' k j, arg) : exprsSubsts k (j+1) args
+
+
+hvarArg' :: F.Symbol -> Int -> F.Symbol
+hvarArg' k i = F.intSymbol (F.suffixSymbol hvarPrefix' k) i
+
+hvarPrefix' :: F.Symbol
+hvarPrefix' = "nnf_arg"
 
 rvarArgSymbol :: String -> F.Expr -> F.Symbol 
 rvarArgSymbol _ (F.EVar x) = x

@@ -31,6 +31,7 @@ library
       Language.Sprite.Common.Misc
       Language.Sprite.Common.Parse
       Language.Sprite.Common.UX
+      Language.Sprite.Common.ANSIColor
       Language.Sprite.L1
       Language.Sprite.L1.Check
       Language.Sprite.L1.Constraints

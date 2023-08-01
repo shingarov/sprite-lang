@@ -12,6 +12,7 @@ import           Text.PrettyPrint.HughesPJ
 import qualified Language.Fixpoint.Horn.Types   as H 
 import qualified Language.Fixpoint.Types        as F 
 import qualified Language.Fixpoint.Misc         as Misc 
+import           Language.Sprite.Common.ANSIColor
 import qualified Language.Sprite.Common.UX      as UX 
 -- import qualified Language.Sprite.Common.Misc    as Misc
 import           Language.Sprite.Common
@@ -19,7 +20,7 @@ import           Language.Sprite.L6.Types
 import           Language.Sprite.L6.Prims
 import           Language.Sprite.L6.Constraints 
 import           Language.Sprite.L6.Elaborate
--- import Debug.Trace (trace)
+import Debug.Trace
 
 -------------------------------------------------------------------------------
 vcgen:: SrcProg -> Either [UX.UserError] SrcQuery
@@ -141,7 +142,17 @@ check g (EFun bx e l) (TFun y s t) = do
 check g (ELet (Decl (Bind x l) e _) e' _) t' = do 
   (c, s) <- synth g e
   c'     <- check (extEnv g x s) e' t'
-  return  $ cAnd c (cAll l x s c')
+  return  $
+          trace
+          ((decorate "\n\ncheck ELet Decl:" (Green,NoColor,Null))
+            ++ "\nx = " ++ show x
+            ++ "\ne = " ++ show (void e)
+            ++ "\ne' = " ++ show (void e')
+            ++ "\nt' = " ++ show t'
+            ++ "\nc = " ++ show c
+            ++ "\nc' = " ++ show c'
+            ++ "\ns = " ++ show s)
+          (cAnd c (cAll l x s c'))
 
 {- [Chk-Rec] 
 

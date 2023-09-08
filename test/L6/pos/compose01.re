@@ -14,3 +14,17 @@ let compose = (cha, f, g, x) => {
   let t3 = cha(x, t1, t2, 0, 0);
   t2
 };
+
+
+/*@ val incr : n:int => int[v | v == (n + 1)] */
+let incr = (n) => {
+  n + 1
+};
+
+
+/*@ val cha0 : x:'a => w:'b => z:'c => int[v|q x w] => int[v|p w z] => Bool[v|r x z] */
+let cha0 = (x, w, z, i1, i2) => { true };
+
+
+/*@ val ex2 : n:int => int[v | v == (n + 2)] */
+let ex2 = compose(cha0, incr, incr);

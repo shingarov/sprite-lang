@@ -20,7 +20,7 @@ let incr = (n) => {
   n + 1
 };
 
-/*@ val cha0 : x:int => y:int[v|v == (x + 1)] => z:int[v|v == (y + 1)] => int[v|z == (x + 2)] */
+/*@ val cha0 : x:int => y:int[?] => z:int[?] => int[?] */
 let cha0 = (x, y, z) => { 0 };
 
 /*@ val add2 : n:int => int[v | v == (n + 2)] */

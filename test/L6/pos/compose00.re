@@ -3,7 +3,7 @@
 /*@ val compose : forall (p : 'b => 'c => bool).
                   forall (q : 'a => 'b => bool).
                   forall (r : 'a => 'c => bool).
-                  (x:'a => w:'b[v|q x v] => z:'c[v|p w v] => Bool[v|r x z])
+                  (x:'a => w:'b[v|q x v] => z:'c[v|p w v] => int[v|r x z])
                => (y:'b => 'c[v | p y v])
                => (z:'a => 'b[v | q z v])
                =>  x:'a
@@ -14,3 +14,14 @@ let compose = (cha, f, g, x) => {
   let t3 = cha(x, t1, t2);
   t2
 };
+
+/*@ val incr : n:int => int[v | v == (n + 1)] */
+let incr = (n) => {
+  n + 1
+};
+
+/*@ val cha0 : x:int => y:int[v|v == (x + 1)] => z:int[v|v == (y + 1)] => int[v|z == (x + 2)] */
+let cha0 = (x, y, z) => { 0 };
+
+/*@ val add2 : n:int => int[v | v == (n + 2)] */
+let add2 = compose(cha0, incr, incr);

@@ -142,7 +142,6 @@ embedAlt x a@(Alt d ys e _) = F.subst su (embed e)
   where 
     su      = F.mkSubst $ zipWith sub ys [0..]
     sub y i = (bindId y, mkEApp (selDataCon d i) x)
-    yis = zipWith
 
 mkEApp :: F.Symbol -> F.Symbol -> F.Expr
 mkEApp f xs = F.eApps (F.expr f) [F.expr xs]

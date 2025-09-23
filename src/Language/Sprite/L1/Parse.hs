@@ -105,7 +105,7 @@ ann = (FP.reserved "/*@" >> (Just <$> annot)) <|> pure Nothing
 annot :: FP.Parser (F.Symbol, RType)
 annot = do
   FP.reserved "val"
-  x <- FP.lowerIdP
+  x <- identifier
   FP.colon
   t <- rtype
   FP.reservedOp "*/"

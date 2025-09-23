@@ -237,7 +237,7 @@ annR = FP.reservedOp "*/"
 sigP :: String -> FP.Parser Sig
 sigP kw = do
   FP.reserved kw
-  x <- FP.lowerIdP
+  x <- identifier
   FP.colon
   t <- rtype
   m <- try (Just <$> metricP) <|> pure Nothing

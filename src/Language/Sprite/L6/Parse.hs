@@ -231,7 +231,7 @@ annR = FP.reservedOp "*/"
 tyBindP :: String -> FP.Parser (F.Symbol, RType)
 tyBindP kw = do
   FP.reserved kw
-  x <- FP.lowerIdP
+  x <- identifier
   FP.colon
   t <- rtype
   annR

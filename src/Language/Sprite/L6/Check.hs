@@ -12,9 +12,9 @@ import qualified Data.HashMap.Strict            as M
 import           Text.PrettyPrint.HughesPJ
 import qualified Language.Fixpoint.Horn.Types   as H
 import qualified Language.Fixpoint.Types        as F
-import qualified Language.Fixpoint.Misc         as Misc
+import           Language.Fixpoint.Misc         (safeZip)
 import qualified Language.Sprite.Common.UX      as UX
--- import qualified Language.Sprite.Common.Misc    as Misc
+import qualified Language.Sprite.Common.Misc    as Misc
 import           Language.Sprite.Common
 import           Language.Sprite.L6.Types
 import           Language.Sprite.L6.Prims
@@ -110,7 +110,7 @@ subP :: F.SrcSpan -> RARef -> RARef -> SrcCstr
 subP l (ARef xts1 (Known _ p1)) (ARef xts2 (Known _ p2))
   = cImpl l xts1 p1 (substs p2 su)
   where
-    su = Misc.traceShow "subP" $ Misc.safeZip "subP" (fst <$> xts2) (fst <$> xts1)
+    su = Misc.traceShow "subP" $ safeZip "subP" (fst <$> xts2) (fst <$> xts1)
 
 -------------------------------------------------------------------------------
 -- | 'Checking' constraints
@@ -294,7 +294,7 @@ synth g (EImm i _) = do
 
 -}
 synth g (EAnn e s l) = do
-  t <- Misc.traceShow "EANN-FRESH" <$> fresh l g s
+  t <-  Misc.traceShow "EANN-FRESH" <$>  fresh l g s
   c <- check g e t
   return (c, t)
 

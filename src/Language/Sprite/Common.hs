@@ -20,6 +20,7 @@ import qualified Language.Fixpoint.Types        as F
 import qualified Language.Fixpoint.Misc         as F
 import qualified Language.Fixpoint.Utils.Files  as F
 import qualified Language.Sprite.Common.UX      as UX
+import Language.Fixpoint.Solver.Interpreter (Simplifiable(simplify))
 
 type SrcCstr   = H.Cstr      UX.UserError
 type SrcQuery  = H.Query     UX.UserError
@@ -72,7 +73,8 @@ checkValidPLE f q = do
   checkValidWithCfg f pleCfg q
 
 checkValidWithCfg :: FilePath -> FC.Config -> SrcQuery -> IO SrcResult
-checkValidWithCfg f cfg q = do
+checkValidWithCfg f cfg q0 = do
+  let q = simplifyQuery q0
   dumpQuery f q
   fmap snd . F.resStatus <$> H.solve cfg q
 
@@ -87,6 +89,23 @@ dumpQuery f q = when True $ do
   F.ensurePath smtFile
   writeFile smtFile (PJ.render . F.pprint $ q)
   putStrLn (F.wrapStars "END: Horn VC")
+
+simplifyQuery :: H.Query a -> H.Query a
+simplifyQuery q = q { H.qCstr = simplifyConstraint (H.qCstr q) }
+
+simplifyConstraint :: H.Cstr a -> H.Cstr a
+simplifyConstraint c = Mb.fromMaybe trivial (go c)
+  where
+    trivial = H.CAnd []
+    go :: H.Cstr a -> Maybe (H.Cstr a)
+    go (H.CAnd cs)  = case Mb.mapMaybe go cs of
+                        []  -> Nothing
+                        [c] -> Just c
+                        cs' -> Just (H.CAnd cs')
+    go (H.All b c) = H.All b <$> go c
+    go (H.Head (H.Reft p) _)
+      | F.isTautoPred p  = Nothing
+    go c                 = Just c
 
 ---------------------------------------------------------------------------
 resultExit :: SrcResult -> IO ExitCode

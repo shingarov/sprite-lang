@@ -1,5 +1,4 @@
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE TupleSections     #-}
 
 module Language.Sprite.L5.Parse
   (
@@ -55,7 +54,7 @@ typP = do
   reserved "type"
   tc    <- FP.lowerIdP
   args  <- typArgs
-  (FP.reservedOp "=" >> whiteSpace)
+  FP.reservedOp "=" >> whiteSpace
   ctors <- ctorsP
   return (Data tc args (mkCtor tc args <$> ctors))
 
